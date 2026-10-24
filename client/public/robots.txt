@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gabrielcg98.github.io/Cg-oficial/sitemap.xml

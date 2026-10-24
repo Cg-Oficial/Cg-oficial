@@ -170,8 +170,20 @@ function vitePluginPublicPlatformConfig(): Plugin {
 
 const plugins = [vitePluginPublicPlatformConfig(), react(), tailwindcss(), jsxLocPlugin(), vitePluginManusDebugCollector()];
 
+const configuredBasePath = process.env.VITE_BASE_PATH ?? "/";
+if (
+  !configuredBasePath.startsWith("/") ||
+  configuredBasePath.startsWith("//") ||
+  configuredBasePath.split("/").includes("..")
+) {
+  throw new Error("VITE_BASE_PATH deve ser um caminho local absoluto, como / ou /Cg-oficial/.");
+}
+const normalizedBasePath = configuredBasePath.endsWith("/")
+  ? configuredBasePath
+  : `${configuredBasePath}/`;
+
 export default defineConfig({
-  base: process.env.VITE_BASE_PATH ?? "/",
+  base: normalizedBasePath,
   plugins,
   resolve: {
     alias: {
@@ -186,6 +198,7 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    assetsDir: "site-assets",
   },
   server: {
     host: true,

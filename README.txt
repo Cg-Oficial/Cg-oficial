@@ -1,36 +1,36 @@
-CG OFICIAL — PACOTE PARA GITHUB PAGES
+CG OFICIAL — PACOTE COMPLETO PARA GITHUB PAGES
 
-Este pacote contém o código-fonte do site, as imagens locais e uma automação do GitHub Actions para publicar o site no GitHub Pages. O workflow calcula automaticamente o caminho correto para um repositório de projeto ou para um site de usuário (NOME.github.io).
+URL pública esperada: https://gabrielcg98.github.io/Cg-oficial/
+O GitHub Pages usa HTTPS no domínio padrão github.io; não é necessário registrar um domínio próprio. Nenhum CNAME ou domínio não registrado está incluído.
 
 PUBLICAÇÃO
-1. Crie um repositório no GitHub e envie todos os arquivos deste pacote para a branch main.
-2. No repositório, abra Settings > Pages e escolha “GitHub Actions” como origem de publicação.
-3. Aguarde a execução de “Publicar CG Oficial no GitHub Pages” na aba Actions. Nas próximas alterações na branch main, a publicação será atualizada automaticamente.
-Se usar um domínio próprio, configure o domínio nas definições do Pages e ajuste VITE_BASE_PATH para / no passo “Definir base URL do site” do workflow.
+O repositório está preparado para publicar pela origem “GitHub Actions”. O workflow em .github/workflows/deploy-pages.yml executa testes, checagem TypeScript, build estático e deploy. O artifact publicado contém index.html e 404.html na raiz do site.
 
-EXECUÇÃO LOCAL
+1. Envie os arquivos do pacote para a branch main do repositório gabrielcg98/Cg-oficial.
+2. Em Settings > Pages, mantenha “GitHub Actions” como fonte de publicação.
+3. Abra Actions e aguarde “Publicar CG Oficial no GitHub Pages” terminar com sucesso. Novos pushes em main publicam automaticamente; também é possível iniciar o workflow manualmente.
+4. Acesse https://gabrielcg98.github.io/Cg-oficial/ e use HTTPS. Não configure cg-oficial.gg até registrar e configurar um domínio próprio.
+
+ARQUIVO INDEX.HTML
+O pacote inclui index.html e 404.html pré-renderizados na raiz do repositório, junto com as pastas de imagens e bundles de produção. O gerador preserva a pasta de origem assets/ e coloca os bundles compilados em site-assets/. O workflow também gera um artifact limpo a partir de dist/public, com index.html na raiz do conteúdo publicado.
+
+ATUALIZAÇÕES FUTURAS
 Requisitos: Node.js 22 e pnpm 10.18.0.
 
-1. Ative o Corepack: corepack enable
-2. Ative o pnpm: corepack prepare pnpm@10.18.0 --activate
-3. Instale: pnpm install --frozen-lockfile
-4. Execute o site localmente: pnpm dev:static
-5. Gere uma versão de produção: pnpm build:static
-O resultado estático fica em dist/public.
+1. Instale: pnpm install --frozen-lockfile
+2. Personalize textos, redes, links, projetos, cores e metadados em client/src/config/siteConfig.ts; imagens ficam em client/public/images.
+3. Gere e sincronize a versão pronta para o GitHub: pnpm build:github-pages
+4. Revise e envie as mudanças e os arquivos gerados para main. O workflow verifica testes, TypeScript e build antes de publicar.
 
-VERIFICAÇÃO
+O comando pnpm build:github-pages usa /Cg-oficial/ por padrão, chama o build estático e copia a saída para a raiz. VITE_BASE_PATH pode ser definido para outra base; o workflow obtém o caminho correto automaticamente pelo GitHub Pages. O gerador recusa substituir arquivos existentes que não estejam no seu manifesto .github-pages-generated.json.
+
+COMANDOS DE VERIFICAÇÃO
 pnpm test
 pnpm check
-pnpm build:static
-
-PERSONALIZAÇÃO
-• Textos, redes sociais, links, projetos, cores e metadados: client/src/config/siteConfig.ts
-• Imagens usadas no site: client/public/images
-• Ícones e favicon: client/public
-• Prefixo automático do GitHub Pages: workflow em .github/workflows/deploy-pages.yml
+pnpm build:github-pages
 
 LIMITES E INTEGRAÇÕES
-O GitHub Pages publica uma versão estática e não executa backend, banco de dados, autenticação ou APIs. O site não afirma que o canal está ao vivo e não simula envio de formulário. O formulário/contato próprio depende de serviço e destinatário que ainda não foram configurados; use os canais públicos existentes até configurar esse envio. Não há chaves ou credenciais de API incluídas neste pacote. O link do GitHub Sponsors é exatamente o fornecido no roteiro original.
+GitHub Pages hospeda apenas o site estático; não executa servidor, banco de dados, autenticação nem APIs. O site não declara uma live ativa nem simula envio de formulário. O formulário próprio depende de um destinatário e serviço de envio configurados; use os canais sociais existentes até essa configuração. Nenhuma chave ou credencial secreta está incluída. O link de GitHub Sponsors é exatamente o informado no roteiro.
 
-ARQUIVOS DO PACOTE
-Por solicitação, este ZIP não inclui arquivos Markdown, PDF ou Word, nem histórico Git, dependências instaladas ou build gerado. O arquivo pnpm-lock.yaml fixa as dependências para uma instalação reproduzível.
+CONTEÚDO DO ZIP
+Inclui o código-fonte completo necessário, lockfile, workflow de publicação, imagens, index.html e saída estática pronta na raiz. Não inclui histórico Git, node_modules, dist, Markdown, PDF ou documentos Word.
