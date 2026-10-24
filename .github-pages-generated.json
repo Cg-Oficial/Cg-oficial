@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "basePath": "/Cg-oficial/",
+  "files": [
+    ".gitkeep",
+    ".nojekyll",
+    "404.html",
+    "__manus__/debug-collector.js",
+    "api/platform/config.js",
+    "apple-touch-icon.png",
+    "favicon.ico",
+    "favicon.svg",
+    "icon-192.png",
+    "icon-512.png",
+    "images/cg-about-source.png",
+    "images/cg-hero.webp",
+    "images/cg-wordmark.png",
+    "index.html",
+    "manus-routes.json",
+    "robots.txt",
+    "site-assets/index-DCYqEW5M.js",
+    "site-assets/index-DSgKm1OX.js",
+    "site-assets/index-JSU2BVE-.js",
+    "site-assets/index-iZIrfSkK.css",
+    "site.webmanifest",
+    "sitemap.xml"
+  ]
+}

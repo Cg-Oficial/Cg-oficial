@@ -1,0 +1,86 @@
+name: Publicar CG Oficial no GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    permissions:
+      contents: read
+      pages: read
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Configurar GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Instalar dependências
+        run: pnpm install --frozen-lockfile
+
+      - name: Testar
+        run: pnpm test
+
+      - name: Verificar TypeScript
+        run: pnpm check
+
+      - name: Definir a base URL do repositório
+        env:
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          base="${PAGES_BASE_PATH:-/}"
+          case "$base" in /*) ;; *) base="/$base" ;; esac
+          case "$base" in */) ;; *) base="${base}/" ;; esac
+          printf 'VITE_BASE_PATH=%s\n' "$base" >> "$GITHUB_ENV"
+          printf 'Usando VITE_BASE_PATH=%s\n' "$base"
+
+      - name: Gerar site estático
+        run: |
+          pnpm build:static
+          test -s dist/public/index.html
+          cp dist/public/index.html dist/public/404.html
+          touch dist/public/.nojekyll
+          test -s dist/public/404.html
+
+      - name: Enviar artifact do site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/public
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
